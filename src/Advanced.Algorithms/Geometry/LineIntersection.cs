@@ -135,6 +135,28 @@ public class LineIntersection
             var m2 = (y4 - y3) / (x4 - x3);
             var c2 = -m2 * x3 + y3;
 
+            if(m1 == m2){ //the slopes are the same, potential overlaping line
+                if(c1 != c2)
+                    return null;
+                
+                if(IsInsideLine(lineB, new Point(x1, y1), tolerance))
+                    return new Point(x1, y1);
+
+                if(IsInsideLine(lineA, new Point(x3, y3), tolerance)) {
+                    if(IsInsideLine(lineA, new Point(x4, y4), tolerance)) {
+                        if((L1f - L2f).sqrMagnitude < (L1f - L2e).sqrMagnitude)
+                            return new Point(x3, y3);
+                        else
+                            return new Point(x1, y1);
+                    }
+                    return new Point(x3, y3);
+                }
+                if(IsInsideLine(lineA, new Point(x4, y4), tolerance)) {
+                    return new Point(x4, y4);
+                }
+                return null;
+            }
+            
             //solving equations (3) and (4) => x = (c1-c2)/(m2-m1)
             //plugging x value in equation (4) => y = c2 + m2 * x
             x = (c1 - c2) / (m2 - m1);
